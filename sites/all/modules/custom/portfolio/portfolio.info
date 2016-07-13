@@ -1,0 +1,4 @@
+name = Portfolio
+description = Blocks for facilitating pending content workflow.
+package = "SM training"
+core = 7.x

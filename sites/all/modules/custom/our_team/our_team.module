@@ -1,0 +1,54 @@
+<?php
+
+function our_team_block_info() {
+  $blocks = array();
+  $blocks['our_team'] = array(
+    'info' => t('Our team'),
+    'status' => TRUE,
+    'region' => 'our_team',
+  );
+
+  return $blocks;
+}
+
+function our_team_block_view($delta = '') {
+  $block = array();
+
+  switch ($delta) {
+    case 'our_team':
+      $nodes = get_node_our_team();
+      $block['content'] = theme('our_team', array('nodes' => $nodes));
+      break;
+
+    default:
+      break;
+  }
+  return $block;
+}
+
+function our_team_theme($exixting, $type, $theme, $path) {
+  return array(
+    'our_team' => array(
+      'path' => $path . '/templates',
+      'template' => 'our_team',
+      'variables' => array('nodes' => NULL),
+    ),
+  );
+}
+
+function get_node_our_team() {
+  $query = db_select('node', 'n');
+  $query->condition('n.type', 'our_team')
+      ->condition('n.status', 1);
+  $query->fields('n', array('nid'));
+  $query->orderBy('n.created', 'DESC');
+  $nids = $query->execute()->fetchCol();
+  if ($nids) {
+    return node_load_multiple($nids);
+  }
+  else {
+    return NULL;
+  }
+}
+
+?>

@@ -1,0 +1,64 @@
+<?php
+
+function changeicon_block_info() {
+  $blocks = array();
+  $blocks['changeicon'] = array(
+    'info' => t('Change icon'),
+    'status' => TRUE,
+    'region' => 'header',
+  );
+  return $blocks;
+}
+
+function changeicon_block_view($delta = '') {
+  $block = array();
+
+  switch ($delta) {
+    case 'changeicon':
+      $nodes = get_node_changeicon();
+      $block['content'] = theme('changeicon', array('nodes' => $nodes));
+      break;
+    default:
+      break;
+  }
+  return $block;
+}
+
+function changeicon_theme($exixting, $type, $theme, $path) {
+  return array(
+    'changeicon' => array(
+      'path' => $path . '/templates',
+      'template' => 'changeicon',
+      'variables' => array('nodes' => NULL),
+    ),
+  );
+}
+
+function get_node_changeicon() {
+  $query = db_select('node', 'n');
+  $query->condition('n.type', 'changeicon')
+      ->condition('n.status', 1);
+  $query->fields('n', array('nid'));
+  $query->orderBy('n.created', 'DESC');
+  $nids = $query->execute()->fetchCol();
+  if ($nids) {
+    return node_load_multiple($nids);
+  }
+  else {
+    return NULL;
+  }
+}
+
+/**
+ * Implements hook_menu().
+ */
+function changeicon_menu() {
+  $items = array();
+  $items['admin/content/changeicon'] = array(
+    'title' => 'Webforms',
+    'access callback' => 'user_access',
+    'description' => 'View and edit all the available webforms on your site.',
+    'type' => MENU_LOCAL_TASK,
+  );
+}
+

@@ -1,0 +1,57 @@
+<?php
+
+/**
+ * Implements of hook_block_info().
+ */
+function service_block_info() {
+  $blocks = array();
+  $blocks['service'] = array(
+    'info' => t('Service'),
+    'status' => TRUE,
+    'region' => 'service',
+  );
+
+  return $blocks;
+}
+
+function service_block_view($delta = '') {
+  $block = array();
+
+  switch ($delta) {
+    case 'service':
+      $nodes = get_node_service();
+      $block['content'] = theme('service', array('nodes' => $nodes));
+      break;
+
+    default:
+      break;
+  }
+  return $block;
+}
+
+function service_theme($exixting, $type, $theme, $path) {
+  return array(
+    'service' => array(
+      'path' => $path . '/templates',
+      'template' => 'service',
+      'variables' => array('nodes' => NULL),
+    ),
+  );
+}
+
+function get_node_service() {
+  $query = db_select('node', 'n');
+  $query->condition('n.type', 'service')
+      ->condition('n.status', 1);
+  $query->fields('n', array('nid'));
+  $query->orderBy('n.created', 'DESC');
+  $nids = $query->execute()->fetchCol();
+  if ($nids) {
+    return node_load_multiple($nids);
+  }
+  else {
+    return NULL;
+  }
+}
+
+?>

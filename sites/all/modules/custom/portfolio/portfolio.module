@@ -1,0 +1,50 @@
+<?php
+function portfolio_block_info() {
+    $blocks = array();
+    $blocks['portfolio'] = array(
+        'info' => t('Portfolio'),
+        'status' =>TRUE,
+        'region' =>'portfolio',
+    );
+  
+  return $blocks;
+}
+function portfolio_block_view($delta = ''){
+    $block = array();
+    
+	switch ($delta) {
+		case 'portfolio':
+                    $nodes = get_node_portfolio();
+                    $block['content'] = theme('portfolio', array('nodes'=>$nodes));
+		break;
+		
+		default:
+		break;
+	}
+	return $block;
+}
+
+function portfolio_theme($exixting, $type, $theme, $path){
+    return array(
+        'portfolio' => array(
+            'path' => $path.'/templates',
+            'template' => 'portfolio',
+            'variables' => array('nodes'=> NULL),
+        ),
+    );
+}
+function get_node_portfolio(){
+    $query = db_select('node','n');
+    $query->condition('n.type','portfolio')
+            ->condition('n.status',1);
+    $query->fields('n', array('nid'));
+    $query->orderBy('n.created','DESC');
+    $nids = $query->execute()->fetchCol();
+    if($nids){
+        return node_load_multiple($nids);
+    }
+    else{
+        return NULL;
+    }
+}
+?>

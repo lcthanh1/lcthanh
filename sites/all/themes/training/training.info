@@ -1,0 +1,31 @@
+name = Training
+core = 7.x
+engine = phptemplate
+
+stylesheets[all][] = css/animate.css
+stylesheets[all][] = css/bootstrap.min.css
+stylesheets[all][] = css/font-awesome.css
+stylesheets[all][] = css/templatemo_misc.css
+stylesheets[all][] = css/templatemo_style.css
+
+scripts[] = js/bootstrap.js
+scripts[] = js/main.js
+scripts[] = js/main.min.js
+scripts[] = js/plugins.js
+scripts[] = js/plugins.min.js
+scripts[] = js/min/plugins.min.js
+scripts[] = js/min/main.min.js
+scripts[] = js/vendor/jquery.gmap3.min.js
+scripts[] = js/vendor/jquery-1.11.0.min.js
+scripts[] = js/vendor/modernizr-2.6.1-respond-1.1.0.min.js
+
+regions[header] = Header
+regions[slide] = Slide
+regions[content] = Content
+regions[service] = Service
+regions[portfolio] = Portfolio
+regions[our_team] = Our team
+regions[contact] = Contact
+regions[footer] = Footer
+
+

@@ -1,0 +1,49 @@
+<?php
+function slideshow_block_info() {
+    $blocks = array();
+    $blocks['slideshow'] = array(
+        'info' => t('Slideshow'),
+        'status' =>TRUE,
+        'region' =>'slide',
+    );
+  
+  return $blocks;
+}
+function slideshow_block_view($delta = ''){
+    $block = array();
+    
+	switch ($delta) {
+		case 'slideshow':
+                    $nodes = get_node_slideshow();
+                    $block['content'] = theme('slideshow', array('nodes'=>$nodes));
+		break;
+		
+		default:
+		break;
+	}
+	return $block;
+}
+
+function slideshow_theme($exixting, $type, $theme, $path){
+    return array(
+        'slideshow' => array(
+            'path' => $path.'/templates',
+            'template' => 'slideshow',
+            'variables' => array('nodes'=> NULL),
+        ),
+    );
+}
+function get_node_slideshow(){
+    $query = db_select('node','n');
+    $query->condition('n.type','slideshow')
+            ->condition('n.status',1);
+    $query->fields('n', array('nid'));
+    $query->orderBy('n.created','DESC');
+    $nids = $query->execute()->fetchCol();
+    if($nids){
+        return node_load_multiple($nids);
+    }
+    else{
+        return NULL;
+    }
+}
